@@ -31,7 +31,12 @@ public class StudentContoller {
     @PostMapping("/student/create")
     private ResponseEntity<Student> createStudent(@RequestBody Student student) {
         try{
-            return new ResponseEntity<>(studentRepository.save(student), HttpStatus.OK);
+            if(studentRepository.existsByemail(student.getEmail())) {
+                return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+            }else{
+               return new ResponseEntity<>(studentRepository.save(student), HttpStatus.OK);
+            }
+           // return new ResponseEntity<>(studentRepository.save(student), HttpStatus.OK);
         }catch (Exception e){
             return  new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }

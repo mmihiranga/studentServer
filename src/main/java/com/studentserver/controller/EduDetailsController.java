@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.studentserver.model.EduDetails;
 import com.studentserver.repository.EduDetailsRepository;
+import com.studentserver.repository.StudentRepository;
 
 @RestController
 @CrossOrigin()
@@ -25,13 +26,19 @@ public class EduDetailsController {
 //autowire the EduDetailsService class  
 @Autowired  
 EduDetailsRepository eduDetailsRepository;
-
+@Autowired  
+StudentRepository studentRepository;
 
     // CREATE new EduDetails
     @PostMapping("/edu/create")
     private ResponseEntity<EduDetails> AddEduDetails(@RequestBody EduDetails eduDetails) {
         try{
-            return new ResponseEntity<>(eduDetailsRepository.save(eduDetails), HttpStatus.OK);
+            if(studentRepository.existsBystdId(eduDetails.getStdId())) {
+                return new ResponseEntity<>(eduDetailsRepository.save(eduDetails), HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+            }
+         //   return new ResponseEntity<>(eduDetailsRepository.save(eduDetails), HttpStatus.OK);
         }catch (Exception e){
             return  new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }

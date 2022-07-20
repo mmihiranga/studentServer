@@ -9,6 +9,7 @@ public interface EduDetailsRepository extends CrudRepository<EduDetails, Integer
     
 
     List<EduDetails> findBystdId(int stdId);
+
 }
 
  
